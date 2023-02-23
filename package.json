@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --watch backend --exec node --experimental-modules backend/server.js",
-    "build": ""
+    "build": "react-scripts build"
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +20,8 @@
     "multer": "^1.4.5-lts.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "build": "^0.1.4",
+    "nodemon": "^2.0.20",
+    "react-scripts": "^5.0.1"
   }
 }
