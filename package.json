@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --watch backend --exec node --experimental-modules backend/server.js",
-    "build": "hamm-shop build --output public"
+    "build:dev": "dotenv -e .env.development react-scripts build"
   },
   "author": "",
   "license": "ISC",
