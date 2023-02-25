@@ -22,7 +22,7 @@ export default function OrderScreen(props) {
       dispatch({ type: ORDER_DELIVER_RESET });
       dispatch(detailsOrder(orderId));
     }
-  }, [dispatch, orderId, successDeliver]);
+  }, [dispatch, orderId, successDeliver, order]);
 
   const deliverHandler = () => {
     dispatch(deliverOrder());
