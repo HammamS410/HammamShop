@@ -1,11 +1,13 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "../../node_modules/react-redux/es/exports";
+import { useNavigate } from "../../node_modules/react-router-dom/dist/index";
 import { listOrderMine } from "../actions/orderActions";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 
 export default function OrderHistoryScreen(props) {
+  const navigate = useNavigate();
   const orderMineList = useSelector((state) => state.orderMineList);
   const { loading, error, orders } = orderMineList;
   const dispatch = useDispatch();
@@ -44,7 +46,7 @@ export default function OrderHistoryScreen(props) {
                     type="button"
                     className="small"
                     onClick={() => {
-                      props.history.push(`/order/${order._id}`);
+                      navigate(`/order/${order._id}`);
                     }}
                   >
                     Details

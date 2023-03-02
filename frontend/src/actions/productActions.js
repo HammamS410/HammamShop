@@ -1,4 +1,7 @@
 import {
+  PRODUCT_CATEGORIES_LIST_FAIL,
+  PRODUCT_CATEGORIES_LIST_REQUEST,
+  PRODUCT_CATEGORIES_LIST_SUCCESS,
   PRODUCT_CREATE_FAIL,
   PRODUCT_CREATE_REQUEST,
   PRODUCT_CREATE_SUCCESS,
@@ -18,13 +21,13 @@ import {
 import Axios from "axios";
 
 export const listProducts =
-  ({ seller = "" }) =>
+  ({ seller = "", name = "", category = "" }) =>
   async (dispatch) => {
     dispatch({
       type: PRODUCT_LIST_REQUEST,
     });
     try {
-      const { data } = await Axios.get(`/api/products?seller=${seller}`);
+      const { data } = await Axios.get(`/api/products?seller=${seller}&name=${name}&category=${category}`);
       dispatch({
         type: PRODUCT_LIST_SUCCESS,
         payload: data,
@@ -34,9 +37,26 @@ export const listProducts =
         type: PRODUCT_LIST_FAIL,
         payload: error.message,
       });
-      console.log(error);
     }
   };
+
+export const listProductCategories = () => async (dispatch) => {
+  dispatch({
+    type: PRODUCT_CATEGORIES_LIST_REQUEST,
+  });
+  try {
+    const { data } = await Axios.get(`/api/products/categories`);
+    dispatch({
+      type: PRODUCT_CATEGORIES_LIST_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_CATEGORIES_LIST_FAIL,
+      payload: error.message,
+    });
+  }
+};
 
 export const detailsProduct = (productId) => async (dispatch) => {
   dispatch({ type: PRODUCT_DETAILS_REQUEST, payload: productId });
@@ -93,7 +113,7 @@ export const deleteProduct = (productId) => async (dispatch, getState) => {
     userSignin: { userInfo },
   } = getState();
   try {
-    const { data } = await Axios.delete(`/api/products/${productId}`, {
+    await Axios.delete(`/api/products/${productId}`, {
       headers: { Authorization: `Bearer ${userInfo.token}` },
     });
     dispatch({ type: PRODUCT_DELETE_SUCCESS });

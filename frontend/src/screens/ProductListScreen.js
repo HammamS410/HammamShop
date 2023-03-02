@@ -1,13 +1,15 @@
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "../../node_modules/react-router-dom/dist/index";
 import { createProduct, deleteProduct, listProducts } from "../actions/productActions";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 import { PRODUCT_CREATE_RESET, PRODUCT_DELETE_RESET } from "../constants/productConstants";
 
 export default function ProductListScreen(props) {
-  const sellerMode = props.match.path.indexOf("/seller") >= 0;
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const sellerMode = pathname.indexOf("/seller") >= 0;
   const productList = useSelector((state) => state.productList);
   const { loading, error, products } = productList;
 
@@ -31,13 +33,13 @@ export default function ProductListScreen(props) {
   useEffect(() => {
     if (successCreate) {
       dispatch({ type: PRODUCT_CREATE_RESET });
-      props.history.push(`/product/${createdProduct._id}/edit`);
+      navigate(`/product/${createdProduct._id}/edit`);
     }
     if (successDelete) {
       dispatch({ type: PRODUCT_DELETE_RESET });
     }
     dispatch(listProducts({ seller: sellerMode ? userInfo._id : "" }));
-  }, [createdProduct, dispatch, props.history, sellerMode, successCreate, successDelete, userInfo._id]);
+  }, [createdProduct, dispatch, navigate, sellerMode, successCreate, successDelete, userInfo._id]);
 
   return (
     <div>
@@ -78,7 +80,7 @@ export default function ProductListScreen(props) {
                 <td>{product.category}</td>
                 <td>{product.brand}</td>
                 <td>
-                  <button type="button" className="small" onClick={() => props.history.push(`/product/${product._id}/edit`)}>
+                  <button type="button" className="small" onClick={() => navigate(`/product/${product._id}/edit`)}>
                     Edit
                   </button>
                   <button type="button" className="small" onClick={() => deleteHandler(product)}>

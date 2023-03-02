@@ -13,10 +13,7 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-mongoose.connect(process.env.MONGODB_URL || "mongodb://localhost/HammShop", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(process.env.MONGODB_URL || "mongodb://localhost/HammShop");
 
 // app.get("/api/products/:id", (req, res) => {
 //   const product = data.products.find((x) => x._id === req.params.id);

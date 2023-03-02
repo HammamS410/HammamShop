@@ -1,27 +1,29 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "../../node_modules/react-router-dom/dist/index";
 import { saveShippingAddress } from "../actions/cartActions";
 import CheckoutSteps from "../components/CheckoutSteps";
 
 export default function ShippingAddressScreen(props) {
+  const navigate = useNavigate();
   const userSignin = useSelector((state) => state.userSignin);
   const { userInfo } = userSignin;
   const cart = useSelector((state) => state.cart);
   const { shippingAddress } = cart;
   if (!userInfo) {
-    props.history.push("/signin");
+    navigate("/signin");
   }
-  const [fullName, setFullName] = useState(shippingAddress.fullName);
-  const [address, setAddress] = useState(shippingAddress.address);
-  const [city, setCity] = useState(shippingAddress.city);
-  const [postalCode, setPostalCode] = useState(shippingAddress.postalCode);
-  const [country, setCountry] = useState(shippingAddress.country);
+  const [fullName, setFullName] = useState(shippingAddress.fullName || "");
+  const [address, setAddress] = useState(shippingAddress.address || "");
+  const [city, setCity] = useState(shippingAddress.city || "");
+  const [postalCode, setPostalCode] = useState(shippingAddress.postalCode || "");
+  const [country, setCountry] = useState(shippingAddress.country || "");
   const dispatch = useDispatch();
   const submitHandler = (e) => {
     e.preventDefault();
     // TODO : dispatch save shipping address action
     dispatch(saveShippingAddress({ fullName, address, city, postalCode, country }));
-    props.history.push("/payment");
+    navigate("/payment");
   };
   return (
     <div>

@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "../../node_modules/react-redux/es/exports";
+import { useNavigate, useParams } from "../../node_modules/react-router-dom/dist/index";
 import { detailsUser, updateUser } from "../actions/userActions";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 import { USER_UPDATE_RESET } from "../constants/userConstants";
 
 export default function UserEditScreen(props) {
-  const userId = props.match.params.id;
+  const navigate = useNavigate();
+  const params = useParams();
+  const { id: userId } = params;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [isSeller, setIsSeller] = useState(false);
@@ -17,12 +20,12 @@ export default function UserEditScreen(props) {
 
   const userUpdate = useSelector((state) => state.userUpdate);
   const { loading: loadingUpdate, error: errorUpdate, success: successUpdate } = userUpdate;
-  
+
   const dispatch = useDispatch();
   useEffect(() => {
     if (successUpdate) {
       dispatch({ type: USER_UPDATE_RESET });
-      props.history.push("/userlist");
+      navigate("/userlist");
     }
     if (!user) {
       dispatch(detailsUser(userId));
@@ -32,7 +35,7 @@ export default function UserEditScreen(props) {
       setIsSeller(user.isSeller);
       setIsAdmin(user.isAdmin);
     }
-  }, [dispatch, props.history, user, successUpdate, userId]);
+  }, [dispatch, navigate, user, successUpdate, userId]);
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(updateUser({ _id: userId, name, email, isSeller, isAdmin }));

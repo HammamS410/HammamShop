@@ -5,10 +5,13 @@ import { detailsProduct, updateProduct } from "../actions/productActions";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 import { PRODUCT_UPDATE_RESET } from "../constants/productConstants";
+import { useNavigate, useParams } from "../../node_modules/react-router-dom/dist/index";
 
 export default function ProductEditScreen(props) {
+  const navigate = useNavigate();
   //   1. get productId from the url
-  const productId = props.match.params.id;
+  const params = useParams();
+  const { id: productId } = params;
   //   2. hook product fetch
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
@@ -27,7 +30,7 @@ export default function ProductEditScreen(props) {
   const dispatch = useDispatch();
   useEffect(() => {
     if (successUpdate) {
-      props.history.push("/productlist");
+      navigate("/productlist");
     }
     // 4. if product exist set value for reat hook
     if (!product || product._id !== productId || successUpdate) {
@@ -44,7 +47,7 @@ export default function ProductEditScreen(props) {
       setDescription(product.description);
     }
     // 6. isi manual second parameter [...]
-  }, [product, dispatch, productId, successUpdate, props.history]);
+  }, [product, dispatch, productId, successUpdate, navigate]);
   //   8. submitHandler function
   const submitHandler = (e) => {
     e.preventDefault();

@@ -1,13 +1,14 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { deliverOrder, detailsOrder } from "../actions/orderActions";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 import { ORDER_DELIVER_RESET } from "../constants/orderConstants";
 
 export default function OrderScreen(props) {
-  const orderId = props.match.params.id;
+  const params = useParams();
+  const { orderId } = params;
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
   const userSignin = useSelector((state) => state.userSignin);

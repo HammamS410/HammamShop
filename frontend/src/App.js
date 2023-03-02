@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { BrowserRouter, Link, Route } from "react-router-dom";
+import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+import { listProductCategories } from "./actions/productActions";
 import { signout } from "./actions/userActions";
 import AdminRoute from "./components/AdminRoute";
+import LoadingBox from "./components/LoadingBox";
+import MessageBox from "./components/MessageBox";
 import PrivateRoute from "./components/PrivateRoute";
+import SearchBox from "./components/SearchBox";
 import SellerRoute from "./components/SellerRoute";
 import CartScreen from "./screens/CartScreen";
 import HomeScreen from "./screens/HomeScreen";
@@ -17,6 +21,7 @@ import ProductListScreen from "./screens/ProductListScreen";
 import ProductScreen from "./screens/ProductScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import RegisterScreen from "./screens/RegisterScreen";
+import SearchScreen from "./screens/SearchScreen";
 import SellerScreen from "./screens/SellerScreen";
 import ShippingAddressScreen from "./screens/ShippingAddressScreen";
 import SigninScreen from "./screens/SigninScreen";
@@ -25,6 +30,7 @@ import UserListScreen from "./screens/UserListScreen";
 
 function App() {
   const cart = useSelector((state) => state.cart);
+  const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
   const { cartItems } = cart;
   const userSignin = useSelector((state) => state.userSignin);
   const { userInfo } = userSignin;
@@ -32,14 +38,25 @@ function App() {
   const signoutHandler = () => {
     dispatch(signout());
   };
+  const productCategoryList = useSelector((state) => state.productCategoryList);
+  const { loading: loadingCategories, error: errorCategories, categories } = productCategoryList;
+  useEffect(() => {
+    dispatch(listProductCategories());
+  }, [dispatch]);
   return (
     <BrowserRouter>
       <div className="grid-container">
         <header className="row">
           <div>
+            <button type="button" className="open-sidebar" onClick={() => setSidebarIsOpen(true)}>
+              <i className="fa fa-bars"></i>
+            </button>
             <Link className="brand" to="/">
               HammShop
             </Link>
+          </div>
+          <div>
+            <SearchBox />
           </div>
           <div>
             <Link to="/cart">
@@ -107,26 +124,106 @@ function App() {
             )}
           </div>
         </header>
+        <aside className={sidebarIsOpen ? "open" : ""}>
+          <ul className="categories">
+            <li>
+              <strong>Categories</strong>
+              <button onClick={() => setSidebarIsOpen(false)} className="close-sidebar" type="button">
+                <i className="fa fa-close"></i>
+              </button>
+            </li>
+            {loadingCategories ? (
+              <LoadingBox></LoadingBox>
+            ) : errorCategories ? (
+              <MessageBox variant="danger">{errorCategories}</MessageBox>
+            ) : (
+              categories.map((c) => (
+                <li key={c}>
+                  <Link to={`/search/category/${c}`} onClick={() => setSidebarIsOpen(false)}>
+                    {c}
+                  </Link>
+                </li>
+              ))
+            )}
+          </ul>
+        </aside>
         <main>
-          <Route path="/seller/:id" component={SellerScreen}></Route>
-          <SellerRoute path="/orderlist/seller" component={OrderListScreen}></SellerRoute>
-          <SellerRoute path="/productlist/seller" component={ProductListScreen}></SellerRoute>
-          <AdminRoute path="/user/:id/edit" component={UserEditScreen}></AdminRoute>
-          <AdminRoute path="/userlist" component={UserListScreen}></AdminRoute>
-          <AdminRoute path="/orderlist" component={OrderListScreen} exact></AdminRoute>
-          <Route path="/product/:id/edit" component={ProductEditScreen} exact></Route>
-          <AdminRoute path="/productlist" component={ProductListScreen} exact></AdminRoute>
-          <Route path="/orderhistory" component={OrderHistoryScreen}></Route>
-          <PrivateRoute path="/profile" component={ProfileScreen}></PrivateRoute>
-          <Route path="/order/:id?" component={OrderScreen}></Route>
-          <Route path="/placeorder" component={PlaceOrderScreen}></Route>
-          <Route path="/payment" component={PaymentMethodScreen}></Route>
-          <Route path="/shipping" component={ShippingAddressScreen}></Route>
-          <Route path="/register" component={RegisterScreen}></Route>
-          <Route path="/signin" component={SigninScreen}></Route>
-          <Route path="/cart/:id?" component={CartScreen}></Route>
-          <Route path="/product/:id" component={ProductScreen} exact></Route>
-          <Route path="/" component={HomeScreen} exact></Route>
+          <Routes>
+            <Route path="/search/category/:category/name/:name" element={<SearchScreen />} exact></Route>
+            <Route path="/search/category/:category" element={<SearchScreen />} exact></Route>
+            <Route path="/search/name/" element={<SearchScreen />} exact></Route>
+            <Route path="/search/name/:name" element={<SearchScreen />} exact></Route>
+            <Route path="/seller/:id" element={<SellerScreen />}></Route>
+            <Route path="/product/:id/edit" element={<ProductEditScreen />} exact></Route>
+            <Route path="/orderhistory" element={<OrderHistoryScreen />}></Route>
+            <Route path="/order/:id?" element={<OrderScreen />}></Route>
+            <Route path="/placeorder" element={<PlaceOrderScreen />}></Route>
+            <Route path="/payment" element={<PaymentMethodScreen />}></Route>
+            <Route path="/shipping" element={<ShippingAddressScreen />}></Route>
+            <Route path="/register" element={<RegisterScreen />}></Route>
+            <Route path="/signin" element={<SigninScreen />}></Route>
+            <Route path="/cart" element={<CartScreen />}></Route>
+            <Route path="/cart/:id" element={<CartScreen />}></Route>
+            <Route path="/product/:id" element={<ProductScreen />} exact></Route>
+            <Route path="/" element={<HomeScreen />} exact></Route>
+
+            <Route
+              path="/orderlist/seller"
+              element={
+                <SellerRoute>
+                  <OrderListScreen />
+                </SellerRoute>
+              }
+            />
+            <Route
+              path="/productlist/seller"
+              element={
+                <SellerRoute>
+                  <ProductListScreen />
+                </SellerRoute>
+              }
+            />
+            <Route
+              path="/user/:id/edit"
+              element={
+                <AdminRoute>
+                  <UserEditScreen />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/userlist"
+              element={
+                <AdminRoute>
+                  <UserListScreen />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/orderlist"
+              element={
+                <AdminRoute>
+                  <OrderListScreen />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/productlist"
+              element={
+                <AdminRoute>
+                  <ProductListScreen />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <PrivateRoute>
+                  <ProfileScreen />
+                </PrivateRoute>
+              }
+            />
+          </Routes>
         </main>
         <footer className="row center">All right reserved</footer>
       </div>
