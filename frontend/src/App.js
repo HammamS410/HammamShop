@@ -149,6 +149,7 @@ function App() {
         </aside>
         <main>
           <Routes>
+            <Route path="/search/category/:category/name/:name/min/:min/max/:max/rating/:rating/order/:order" element={<SearchScreen />} exact></Route>
             <Route path="/search/category/:category/name/:name" element={<SearchScreen />} exact></Route>
             <Route path="/search/category/:category" element={<SearchScreen />} exact></Route>
             <Route path="/search/name/" element={<SearchScreen />} exact></Route>
