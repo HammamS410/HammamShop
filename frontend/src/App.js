@@ -149,7 +149,7 @@ function App() {
         </aside>
         <main>
           <Routes>
-            <Route path="/search/category/:category/name/:name/min/:min/max/:max/rating/:rating/order/:order" element={<SearchScreen />} exact></Route>
+            <Route path="/search/category/:category/name/:name/min/:min/max/:max/rating/:rating/order/:order/pageNumber/:pageNumber" element={<SearchScreen />} exact></Route>
             <Route path="/search/category/:category/name/:name" element={<SearchScreen />} exact></Route>
             <Route path="/search/category/:category" element={<SearchScreen />} exact></Route>
             <Route path="/search/name/" element={<SearchScreen />} exact></Route>
@@ -157,6 +157,7 @@ function App() {
             <Route path="/seller/:id" element={<SellerScreen />}></Route>
             <Route path="/product/:id/edit" element={<ProductEditScreen />} exact></Route>
             <Route path="/orderhistory" element={<OrderHistoryScreen />}></Route>
+            <Route path="/orderhistory/pageNumber/:pageNumber" element={<OrderHistoryScreen />}></Route>
             <Route path="/order/:id?" element={<OrderScreen />}></Route>
             <Route path="/placeorder" element={<PlaceOrderScreen />}></Route>
             <Route path="/payment" element={<PaymentMethodScreen />}></Route>
@@ -201,6 +202,14 @@ function App() {
               }
             />
             <Route
+              path="/userlist/pageNumber/:pageNumber"
+              element={
+                <AdminRoute>
+                  <UserListScreen />
+                </AdminRoute>
+              }
+            />
+            <Route
               path="/orderlist"
               element={
                 <AdminRoute>
@@ -209,7 +218,23 @@ function App() {
               }
             />
             <Route
+              path="/orderlist/pageNumber/:pageNumber"
+              element={
+                <AdminRoute>
+                  <OrderListScreen />
+                </AdminRoute>
+              }
+            />
+            <Route
               path="/productlist"
+              element={
+                <AdminRoute>
+                  <ProductListScreen />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/productlist/pageNumber/:pageNumber"
               element={
                 <AdminRoute>
                   <ProductListScreen />
