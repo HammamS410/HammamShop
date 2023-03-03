@@ -6,6 +6,14 @@ const data = {
       email: "admin@example.com",
       password: bcrypt.hashSync("123456", 8),
       isAdmin: true,
+      isSeller: true,
+      seller: {
+        name: "Nike Air Jordan High Panda",
+        logo: "/images/P1.jpg",
+        description: "Top seller sneakers shoes",
+        rating: 4.5,
+        numReviews: 120,
+      },
     },
     {
       name: "Dyan",
