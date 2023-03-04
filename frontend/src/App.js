@@ -10,6 +10,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import SearchBox from "./components/SearchBox";
 import SellerRoute from "./components/SellerRoute";
 import CartScreen from "./screens/CartScreen";
+import DashboardScreen from "./screens/DashboardScreen";
 import HomeScreen from "./screens/HomeScreen";
 import OrderHistoryScreen from "./screens/OrderHistoryScreen";
 import OrderListScreen from "./screens/OrderListScreen";
@@ -230,6 +231,14 @@ function App() {
               element={
                 <AdminRoute>
                   <ProductListScreen />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <AdminRoute>
+                  <DashboardScreen />
                 </AdminRoute>
               }
             />
